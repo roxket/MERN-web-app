@@ -1,5 +1,5 @@
 import React from "react";
-import { layout } from "antd";
+import { Layout } from "antd";
 export default function LayoutAdmin() {
   return (
     <layout>

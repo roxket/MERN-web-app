@@ -9,11 +9,7 @@ import "./App.scss";
 function App() {
   return (
     <div>
-      <h1>showing app.js</h1>
-      <Admin />
-      <SignIn />
-      <Home />
-      <Contact />
+      <h1>Showing app.js</h1>
     </div>
   );
 }
