@@ -9,13 +9,13 @@ export default function LayoutAdmin(props) {
   const { Header, Content, Footer } = Layout;
   return (
     <Layout>
-      <h2>Menu Sider Admin</h2>
-      <Layout>
-        <Header>Header</Header>
-        <Content>
+      {/*TO DO: Menu Sider*/}
+      <Layout className="layout-admin">
+        <Header className="layout-admin__header">{/*TO DO: Menu top */}</Header>
+        <Content className="layout-admin__content">
           <LoadRoutes routes={routes} />
         </Content>
-        <Footer>Roxket Lab</Footer>
+        <Footer className="layout-admin__footer">Roxket Lab</Footer>
       </Layout>
     </Layout>
   );
