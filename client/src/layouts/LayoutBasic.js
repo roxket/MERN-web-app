@@ -1,11 +1,32 @@
 import React from "react";
+import { Route } from "react-router-dom";
 import { Layout } from "antd";
-export default function LayoutBasic() {
+
+import "./LayoutBasic.scss";
+
+export default function LayoutBasic(props) {
+  const { routes } = props;
+  const { Content, Footer } = Layout;
   return (
-    <layout>
+    <Layout>
       <h2>Menu Sider Basic</h2>
-      <div>Contenido...</div>
-      <h5>Footer...</h5>
-    </layout>
+      <Layout>
+        <Content>
+          <LoadRoutes routes={routes} />
+        </Content>
+        <Footer>Roxket Lab</Footer>
+      </Layout>
+    </Layout>
   );
+}
+
+function LoadRoutes({ routes }) {
+  return routes.map((routes, index) => (
+    <Route
+      key={index}
+      path={routes.path}
+      exact={routes.exact}
+      component={routes.component}
+    />
+  ));
 }
