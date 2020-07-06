@@ -6,7 +6,7 @@ import {
   PoweroffOutlined,
 } from "@ant-design/icons";
 
-import RoxketLogo from "../../../assets/img/jpg/roxket_logo.jpg";
+import RoxketLogo from "../../../assets/img/jpg/roxket_logo.png";
 
 import "./MenuTop.scss";
 
