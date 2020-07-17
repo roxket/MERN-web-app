@@ -1,28 +1,41 @@
 import React, { useState } from "react";
-import "./RegisterForm.scss";
 import { Form, Input, Button, Checkbox, notification } from "antd";
 import { UserAddOutlined, LockOutlined } from "@ant-design/icons";
 import {
   emailValidation,
   minLengthValidation,
 } from "../../../utils/formValidation";
+import { signUpApi } from "../../../api/user";
+import "./RegisterForm.scss";
 
 export default function RegisterForm() {
-  useState[(inputs, setInputs)] = useState({
+  const [inputs, setInputs] = useState({
     email: "",
     password: "",
     repeatPassword: "",
     privacyPolicy: false,
   });
 
-  const [formValid, setFormValid] = userState({
+  const [formValid, setFormValid] = useState({
     email: false,
     password: false,
     repeatPassword: false,
     privacyPolicy: false,
   });
 
-  const changeForm = (event) => {};
+  const changeForm = (event) => {
+    if (event.target.name === "privacyPolicy") {
+      setInputs({
+        ...inputs,
+        [event.target.name]: event.target.checked,
+      });
+    } else {
+      setInputs({
+        ...inputs,
+        [event.target.name]: event.target.value,
+      });
+    }
+  };
 
   const inputValidation = (event) => {
     const { type, name } = event.target;
@@ -31,28 +44,77 @@ export default function RegisterForm() {
         ...formValid,
         [name]: emailValidation(event.target),
       });
-    }
-
-    if (type === "password") {
+    } else if (type === "password") {
       setFormValid({
         ...formValid,
         [name]: minLengthValidation(event.target, 6),
       });
-    }
-
-    if (type === "checkbox") {
+    } else if (type === "checkbox") {
       setFormValid({
         ...formValid,
         [name]: event.target.checked,
       });
     }
   };
-  const register = (event) => {
+
+  const register = async (event) => {
     event.preventDefault();
+    //const { email, password, repeatPassword, privacyPolicy } = formValid;
+    const emailVal = inputs.email;
+    const passwordVal = inputs.password;
+    const repeatPasswordVal = inputs.repeatPassword;
+    const privacyPolicyVal = inputs.privacyPolicy;
+
+    if (!emailVal || !passwordVal || !repeatPasswordVal || !privacyPolicyVal) {
+      notification.error({
+        message: "Todos los campos son obligatorios",
+      });
+    } else {
+      if (passwordVal !== repeatPasswordVal) {
+        notification.error({
+          message: "Las contraseñas tienen que ser iguales.",
+        });
+      } else {
+        const result = await signUpApi(inputs);
+        if (!result.ok) {
+          notification["error"]({
+            message: result.message,
+          });
+        } else {
+          notification["success"]({
+            message: result.message,
+          });
+          resetForm();
+        }
+      }
+    }
+  };
+
+  const resetForm = () => {
+    const inputs = document.getElementsByTagName("input");
+
+    for (let i = 0; i < inputs.length; i++) {
+      inputs[i].classList.remove("success");
+      inputs[i].classList.remove("error");
+    }
+
+    setInputs({
+      email: "",
+      password: "",
+      repeatPassword: "",
+      privacyPolicy: false,
+    });
+
+    setFormValid({
+      email: false,
+      password: false,
+      repeatPassword: false,
+      privacyPolicy: false,
+    });
   };
 
   return (
-    <Form className="register-form" onChange={changeForm} onSubmit={register}>
+    <Form className="register-form" onChange={changeForm}>
       <Form.Item>
         <Input
           prefix={<UserAddOutlined style={{ color: "rgba:(0,0,0,0.25)" }} />}
@@ -83,7 +145,7 @@ export default function RegisterForm() {
           placeholder="Repetir contraseña"
           className="register-form__input"
           onChange={inputValidation}
-          value={input.repeatPassword}
+          value={inputs.repeatPassword}
         />
       </Form.Item>
       <Form.Item>
@@ -96,7 +158,7 @@ export default function RegisterForm() {
         </Checkbox>
       </Form.Item>
       <Form.Item>
-        <Button htmlType="Submit" className="register-form__button">
+        <Button onClick={register} className="register-form__button">
           Crear cuenta
         </Button>
       </Form.Item>
